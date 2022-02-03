@@ -10,5 +10,6 @@ void free_cube_mem(struct Cube*);                 //Frees all cube memory and th
 char *generate_scramble(int);                     //Generates random algorithm without repetitions
 struct Cube *copy_cube(struct Cube *);            //Properly copies all cube data. Returns pointer to new cube
 int is_solved(struct Cube *);                     //Checks if all faces are solved
+char int_to_face(int);                            //Returns face turned from int
 
 #endif

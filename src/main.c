@@ -12,22 +12,25 @@ int main(int argc, char *argv[]){
   printf("Generated scramble:\n");
   print_algorithm(scramble);
 
-  char *tperm = "RUR'U'R'FR2U'R'U'RUR'F'";
-  printf("T-Perm:\n");
-  print_algorithm(tperm);
-  perform_algorithm(cube, tperm);
+  // char *tperm = "RUR'U'R'FR2U'R'U'RUR'F'";
+  // printf("T-Perm:\n");
+  // print_algorithm(tperm);
+
+  perform_algorithm(cube, scramble);
 
   printf("\n\n");
   print_cube(cube);
   printf("\n\n");
 
   struct CubePS *cube_ps = initCubePS(cube);
-  set_decisions(cube_ps, tperm);
+  add_decision(cube_ps, "R2");
 
-
+  solve(cube_ps);
 
   printf("Solved? %d\nBy using %d moves:", is_solution(cube_ps), get_move_n(cube_ps));
   print_algorithm(get_decisions(cube_ps));
+  perform_algorithm(cube, get_decisions(cube_ps));
+  print_cube(cube);
 
 
   free_ps_mem(cube_ps);

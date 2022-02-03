@@ -4,6 +4,14 @@
 #include <string.h>
 #include <cube.h>
 
+//Colors
+#define C_RED "\033[31m"
+#define C_ORA "\033[33m"
+#define C_YEL "\033[35m"
+#define C_WHT "\033[0m"
+#define C_BLU "\033[34m"
+#define C_GRN "\033[36m"
+
 struct Cube{
   int n;
   int dim;
@@ -340,7 +348,6 @@ struct Cube *init_cube(int n){
       cube->faces[i][j] = malloc(cube->n);
       for (int k = 0; k < cube->n; k++){
         cube->faces[i][j][k] = l;
-        // l++;
       }
     }
     l++;
@@ -351,32 +358,63 @@ struct Cube *init_cube(int n){
 
 }
 
+void print_color(int color){
+  switch(color){
+    case 0:
+      printf(C_WHT);
+      break;
+    case 1:
+      printf(C_RED);
+      break;
+    case 2:
+      printf(C_BLU);
+      break;
+    case 3:
+      printf(C_ORA);
+      break;
+    case 4:
+      printf(C_GRN);
+      break;
+    case 5:
+      printf(C_YEL);
+      break;
+    default:
+      printf(C_WHT);
+      break;
+  }
+}
 
 void print_cube(struct Cube *cube){
   int face = 0;
   for (int i = 0; i < cube->n; i++){
     for (int j = 0; j < cube->n; j++){
-      printf("    ");
+      printf("   ");
     }
     for (int j = 0; j < cube->n; j++){
-      printf(" %2d ", cube->faces[face][i][j]);
+      print_color(cube->faces[face][i][j]);
+      printf("[%d]", cube->faces[face][i][j]);
+      print_color(-1);
     }
     printf("\n");
   }
   for (int i = 0; i < cube->n; i++){
     for (face = 1; face < 5; face++){
       for (int j = 0; j < cube->n; j++){
-        printf(" %2d ", cube->faces[face][i][j]);
+        print_color(cube->faces[face][i][j]);
+        printf("[%d]", cube->faces[face][i][j]);
+        print_color(-1);
       }
     }
     printf("\n");
   }
   for (int i = 0; i < cube->n; i++){
     for (int j = 0; j < cube->n; j++){
-      printf("    ");
+      printf("   ");
     }
     for (int j = 0; j < cube->n; j++){
-      printf(" %2d ", cube->faces[face][i][j]);
+      print_color(cube->faces[face][i][j]);
+      printf("[%d]", cube->faces[face][i][j]);
+      print_color(-1);
     }
     printf("\n");
   }
@@ -393,4 +431,23 @@ void print_algorithm(char *alg){
     i++;
   }
   printf("\n");
+}
+
+char int_to_face(int face){
+  switch(face){
+    case 0:
+      return 'U';
+    case 1:
+      return 'L';
+    case 2:
+      return 'F';
+    case 3:
+      return 'R';
+    case 4:
+      return 'B';
+    case 5:
+      return 'D';
+    default:
+      return '\0';
+  }
 }
