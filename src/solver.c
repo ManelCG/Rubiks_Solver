@@ -9,10 +9,21 @@ struct CubePS{
   int move_n;
 };
 
+struct CubePS *solve(struct CubePS *ps){
+
+}
+
+void free_ps_mem(struct CubePS *ps){
+  free_cube_mem(ps->cube);
+  free(ps->decisions);
+
+  free(ps);
+}
+
 struct CubePS *initCubePS(struct Cube *cube){
   struct CubePS *cube_ps = malloc(sizeof(struct CubePS));
 
-  cube_ps->cube = cube;
+  cube_ps->cube = copy_cube(cube);
   cube_ps->decisions = NULL;
   cube_ps->move_n = 0;
 

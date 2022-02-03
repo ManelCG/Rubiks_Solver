@@ -8,32 +8,28 @@
 int main(int argc, char *argv[]){
   srandom(69);
   struct Cube *cube = init_cube(3);
-  print_cube(cube);
+  char *scramble = generate_scramble(69);
+  printf("Generated scramble:\n");
+  print_algorithm(scramble);
 
-  printf("\n\n");
-
-  // char *alg = generate_scramble(20);
-  // print_algorithm(alg);
-  // perform_algorithm(cube, alg);
-
-  char *alg = malloc(2);
-  strcpy(alg, "R");
-  perform_algorithm(cube, alg);
+  char *tperm = "RUR'U'R'FR2U'R'U'RUR'F'";
+  printf("T-Perm:\n");
+  print_algorithm(tperm);
+  perform_algorithm(cube, tperm);
 
   printf("\n\n");
   print_cube(cube);
-
   printf("\n\n");
-
 
   struct CubePS *cube_ps = initCubePS(cube);
-  set_decisions(cube_ps, "L'");
-  add_decision(cube_ps, "L'");
+  set_decisions(cube_ps, tperm);
 
 
 
-  printf("Solved? %d\nBy using %d moves: %s\n", is_solution(cube_ps), get_move_n(cube_ps), get_decisions(cube_ps));
+  printf("Solved? %d\nBy using %d moves:", is_solution(cube_ps), get_move_n(cube_ps));
+  print_algorithm(get_decisions(cube_ps));
 
-  free(cube_ps);
+
+  free_ps_mem(cube_ps);
   free_cube_mem(cube);
 }

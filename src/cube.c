@@ -46,6 +46,8 @@ void free_cube_mem(struct Cube *cube){
 
     free(cube->faces[face]);
   }
+
+  free(cube);
 }
 
 char *generate_scramble(int len){
@@ -390,4 +392,5 @@ void print_algorithm(char *alg){
 
     i++;
   }
+  printf("\n");
 }
