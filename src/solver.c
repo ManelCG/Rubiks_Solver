@@ -4,10 +4,13 @@
 #include <cube.h>
 #include <solver.h>
 
+#define MAX_SOLVE_DEPTH 6
+
 struct CubePS{
   struct Cube *cube;
   char *decisions;
   int move_n;
+  int solved;
 };
 
 struct Successors{
@@ -20,9 +23,6 @@ struct Successors *successors(struct CubePS *ps){
   char lastmove = get_last_move(ps);
   succ->n = 0;
 
-  printf("Last move was %c\n", lastmove);
-
-
   succ->v = malloc(sizeof(struct Successors) * 18);
 
   int ptr = 0;
@@ -33,6 +33,8 @@ struct Successors *successors(struct CubePS *ps){
     if (face != lastmove){
       char *move = malloc(3);
       move[0] = face;
+      move[1] = '\0';
+      move[2] = '\0';
       for (int j = 0; j < 3; j++){
         succ->v[ptr] = copyCubePS(ps);
         //cw, a-cw, 2
@@ -57,13 +59,10 @@ struct Successors *successors(struct CubePS *ps){
     }
 
   }
-
-
   return succ;
 }
 
 char get_last_move(struct CubePS *ps){
-  printf("%s\n", get_decisions(ps));
   if (get_decisions(ps) != NULL){
     int ptr = 0;
     char move = '\0';
@@ -82,13 +81,29 @@ char get_last_move(struct CubePS *ps){
 }
 
 struct CubePS *solve(struct CubePS *ps){
-  printf("Solving cube\n");
+  struct CubePS *solution;
 
-  struct Successors *succ = successors(ps);
-
-  for (int i = 0; i < succ->n; i++){
-    print_algorithm(get_decisions(succ->v[i]));
+  if (is_solution(ps)){
+    return ps;
   }
+
+  if (ps->move_n < MAX_SOLVE_DEPTH){
+    struct Successors *succ = successors(ps);
+
+    // printf("PS has %d\n", ps->move_n);
+    for (int i = 0; i < succ->n; i++){
+      // printf("Sending new for solve\n");
+      // printf("With decisions %s\n", succ->v[i]->decisions);
+      solution = solve(succ->v[i]);
+      if (solution != NULL){
+        if(is_solution(solution)){
+          printf("Found solution\n");
+          return solution;
+        }
+      }
+    }
+  }
+  return NULL;
 }
 
 void free_ps_mem(struct CubePS *ps){
@@ -105,6 +120,7 @@ struct CubePS *initCubePS(struct Cube *cube){
   cube_ps->decisions = malloc(1);
   strcpy(cube_ps->decisions, "");
   cube_ps->move_n = 0;
+  cube_ps->solved = -1;
 
   return cube_ps;
 }
@@ -113,6 +129,7 @@ struct CubePS *copyCubePS(struct CubePS *ps){
   struct CubePS *new = malloc(sizeof(struct CubePS));
 
   new->cube = copy_cube(ps->cube);
+  new->solved = -1;
   int ptr = 0;
   while (ps->decisions[ptr] != '\0'){
     ptr++;
@@ -165,6 +182,7 @@ void add_decision(struct CubePS *cube_ps, char *decision){
   free(cube_ps->decisions);
   cube_ps->decisions = new_decisions;
   cube_ps->move_n++;
+  perform_algorithm(cube_ps->cube, decision);
 }
 
 int get_move_n(struct CubePS *ps){
@@ -180,9 +198,15 @@ char *get_decisions(struct CubePS *ps){
 }
 
 int is_solution(struct CubePS *cube_ps){
-  struct Cube *solved = copy_cube(cube_ps->cube);
+  if (cube_ps->solved == -1){
+    struct Cube *solved = copy_cube(cube_ps->cube);
 
-  perform_algorithm(solved, get_decisions(cube_ps));
+    // perform_algorithm(solved, get_decisions(cube_ps));
+    cube_ps->solved = is_solved(solved);
+    return cube_ps->solved;
+  } else {
+    return cube_ps->solved;
+  }
 
-  return is_solved(solved);
+
 }

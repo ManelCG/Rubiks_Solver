@@ -6,9 +6,9 @@
 #include <solver.h>
 
 int main(int argc, char *argv[]){
-  srandom(69);
+  srandom(420);
   struct Cube *cube = init_cube(3);
-  char *scramble = generate_scramble(69);
+  char *scramble = generate_scramble(6);
   printf("Generated scramble:\n");
   print_algorithm(scramble);
 
@@ -23,9 +23,8 @@ int main(int argc, char *argv[]){
   printf("\n\n");
 
   struct CubePS *cube_ps = initCubePS(cube);
-  add_decision(cube_ps, "R2");
 
-  solve(cube_ps);
+  cube_ps = solve(cube_ps);
 
   printf("Solved? %d\nBy using %d moves:", is_solution(cube_ps), get_move_n(cube_ps));
   print_algorithm(get_decisions(cube_ps));
