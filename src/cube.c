@@ -183,6 +183,9 @@ void turn_face(struct Cube *cube, int face, int clockwise){
       }
     }
   }
+  for (int i = 0; i < cube->n; i++){
+    free(cube->faces[face][i]);
+  }
   free(cube->faces[face]);
   cube->faces[face] = new_face;
 
@@ -328,7 +331,7 @@ void turn_face(struct Cube *cube, int face, int clockwise){
   }
 
   free(aux);
-  }
+}
 
 
 

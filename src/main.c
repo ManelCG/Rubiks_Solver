@@ -5,6 +5,9 @@
 #include <cube.h>
 #include <solver.h>
 
+#define MAX_SOLVE_DEPTH 5
+#define MAX_SUCC_SIZE 500
+
 int main(int argc, char *argv[]){
   srandom(420);
   struct Cube *cube = init_cube(3);
@@ -26,12 +29,17 @@ int main(int argc, char *argv[]){
 
   cube_ps = solve(cube_ps);
 
-  printf("Solved? %d\nBy using %d moves:", is_solution(cube_ps), get_move_n(cube_ps));
-  print_algorithm(get_decisions(cube_ps));
-  perform_algorithm(cube, get_decisions(cube_ps));
-  print_cube(cube);
+  if (cube_ps != NULL){
+
+    printf("Solved? %d\nBy using %d moves:", is_solution(cube_ps), get_move_n(cube_ps));
+    print_algorithm(get_decisions(cube_ps));
+    perform_algorithm(cube, get_decisions(cube_ps));
+    print_cube(cube);
+    free_ps_mem(cube_ps);
+  } else {
+    printf("No solution found under %d moves\n", MAX_SOLVE_DEPTH);
+  }
 
 
-  free_ps_mem(cube_ps);
   free_cube_mem(cube);
 }
